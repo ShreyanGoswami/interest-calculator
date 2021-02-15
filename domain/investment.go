@@ -33,23 +33,23 @@ type (
 )
 
 func (investment *Investment) calculateInterest() float64 {
-	return investment.currentAmount * (investment.interestRatePerDay / 100)
+	return investment.CurrentAmount * (investment.InterestRatePerDay / 100)
 }
 
 func (investment Investment) CalculateTodaysValue() float64 {
-	return investment.currentAmount + investment.calculateInterest()
+	return investment.CurrentAmount + investment.calculateInterest()
 }
 
 func (investment Investment) GenerateHistory(endDateForReport time.Time) ([]InvestmentReport, error) {
 	investmentReport := []InvestmentReport{}
-	numberOfDays := endDateForReport.Sub(investment.startDate).Hours() / 24
-	prevDate := investment.startDate
-	currAmount := investment.principalAmount
+	numberOfDays := endDateForReport.Sub(investment.StartDate).Hours() / 24
+	prevDate := investment.StartDate
+	currAmount := investment.PrincipalAmount
 	for i := 0; i < int(numberOfDays); i++ {
 		currVal := InvestmentReport{}
 		currVal.date = prevDate
 		currVal.amount = currAmount
-		currAmount = calculateAmountAfterInterest(currAmount, investment.interestRatePerDay)
+		currAmount = calculateAmountAfterInterest(currAmount, investment.InterestRatePerDay)
 		investmentReport = append(investmentReport, currVal)
 		prevDate = prevDate.Add(time.Hour * time.Duration(24))
 	}
@@ -62,8 +62,8 @@ func calculateAmountAfterInterest(amount, interest float64) float64 {
 
 func NewInvestment(initialAmount, currAmount, interestPerDay float64) Investment {
 	return Investment{
-		principalAmount:    initialAmount,
-		currentAmount:      currAmount,
-		interestRatePerDay: interestPerDay,
+		PrincipalAmount:    initialAmount,
+		CurrentAmount:      currAmount,
+		InterestRatePerDay: interestPerDay,
 	}
 }

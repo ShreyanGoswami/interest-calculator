@@ -17,10 +17,10 @@ func NewInMemoryInvestmentRepo(schema *memdb.DBSchema) (*InMemoryInvestmentRepo,
 	return &InMemoryInvestmentRepo{db}, nil
 }
 
-func (_ InMemoryInvestmentRepo) FillInvestmentInMemoryDatabase(db *memdb.MemDB, investments []domain.Investment) {
-	txn := db.Txn(true)
+func (a InMemoryInvestmentRepo) FillInvestmentInMemoryDatabase(tableName string, investments []domain.Investment) {
+	txn := a.db.Txn(true)
 	for _, investment := range investments {
-		if err := txn.Insert("investments", investment); err != nil {
+		if err := txn.Insert(tableName, investment); err != nil {
 			panic(err)
 		}
 	}

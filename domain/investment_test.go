@@ -42,11 +42,11 @@ func TestInvestment_GenerateReport(t *testing.T) {
 		{
 			name: "Succesfully generate two days of report",
 			investment: Investment{
-				startDate:           time.Date(2021, time.January, 1, 0, 0, 0, 0, time.UTC),
-				principalAmount:     1000,
-				currentAmount:       1000,
-				interestRatePerDay:  1.0,
-				interestRateOverall: 100,
+				StartDate:           time.Date(2021, time.January, 1, 0, 0, 0, 0, time.UTC),
+				PrincipalAmount:     1000,
+				CurrentAmount:       1000,
+				InterestRatePerDay:  1.0,
+				InterestRateOverall: 100,
 			},
 			args: time.Date(2021, time.January, 3, 0, 0, 0, 0, time.UTC),
 			expected: []InvestmentReport{
@@ -63,11 +63,11 @@ func TestInvestment_GenerateReport(t *testing.T) {
 		{
 			name: "Successfully generate report for two days at the boundary of two months",
 			investment: Investment{
-				startDate:           time.Date(2021, time.January, 31, 0, 0, 0, 0, time.UTC),
-				principalAmount:     1000,
-				currentAmount:       1000,
-				interestRatePerDay:  1.0,
-				interestRateOverall: 100,
+				StartDate:           time.Date(2021, time.January, 31, 0, 0, 0, 0, time.UTC),
+				PrincipalAmount:     1000,
+				CurrentAmount:       1000,
+				InterestRatePerDay:  1.0,
+				InterestRateOverall: 100,
 			},
 			args: time.Date(2021, time.February, 2, 0, 0, 0, 0, time.UTC),
 			expected: []InvestmentReport{
@@ -84,11 +84,11 @@ func TestInvestment_GenerateReport(t *testing.T) {
 		{
 			name: "Successfully generate report for two days at the boundary of two years",
 			investment: Investment{
-				startDate:           time.Date(2021, time.December, 31, 0, 0, 0, 0, time.UTC),
-				principalAmount:     1000,
-				currentAmount:       1000,
-				interestRatePerDay:  1.0,
-				interestRateOverall: 100,
+				StartDate:           time.Date(2021, time.December, 31, 0, 0, 0, 0, time.UTC),
+				PrincipalAmount:     1000,
+				CurrentAmount:       1000,
+				InterestRatePerDay:  1.0,
+				InterestRateOverall: 100,
 			},
 			args: time.Date(2022, time.January, 2, 0, 0, 0, 0, time.UTC),
 			expected: []InvestmentReport{

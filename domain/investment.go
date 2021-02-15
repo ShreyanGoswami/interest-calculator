@@ -17,13 +17,13 @@ type (
 
 	Investment struct {
 		InvestmentID
-		currentAmount       float64
-		interestRatePerDay  float64
-		startDate           time.Time
-		endDate             time.Time
-		duration            time.Time
-		principalAmount     float64
-		interestRateOverall float64
+		CurrentAmount       float64
+		InterestRatePerDay  float64
+		StartDate           time.Time
+		EndDate             time.Time
+		Duration            time.Time
+		PrincipalAmount     float64
+		InterestRateOverall float64
 	}
 
 	InvestmentReport struct {

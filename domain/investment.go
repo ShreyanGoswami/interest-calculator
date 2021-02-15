@@ -10,6 +10,7 @@ type (
 		AddInvestment(context.Context, Investment) (Investment, error)
 		UpdateInvestment(context.Context, Investment) (Investment, error)
 		FindInvestmentById(context.Context, InvestmentID) (Investment, error)
+		CloseInvestment(context.Context, InvestmentID) (Investment, error)
 	}
 
 	InvestmentID string
@@ -35,8 +36,8 @@ func (investment *Investment) calculateInterest() float64 {
 	return investment.currentAmount * (investment.interestRatePerDay / 100)
 }
 
-func (investment Investment) CalculateTodaysValue() (float64, error) {
-	return investment.currentAmount + investment.calculateInterest(), nil
+func (investment Investment) CalculateTodaysValue() float64 {
+	return investment.currentAmount + investment.calculateInterest()
 }
 
 func (investment Investment) GenerateHistory(endDateForReport time.Time) ([]InvestmentReport, error) {

@@ -21,7 +21,7 @@ func TestInvestment_CalculateTodaysInterestAmount(t *testing.T) {
 
 	for _, tc := range tests {
 		t.Run(tc.name, func(t *testing.T) {
-			actual, _ := tc.investment.CalculateTodaysValue()
+			actual := tc.investment.CalculateTodaysValue()
 			if actual != tc.expected {
 				t.Errorf("[TestCase '%s'] Result: '%v' | Expected: '%v'",
 					tc.name,

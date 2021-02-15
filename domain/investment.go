@@ -1,11 +1,15 @@
 package domain
 
-import "time"
+import (
+	"context"
+	"time"
+)
 
 type (
 	InvestmentRepository interface {
-		CalculateTodaysValue() (float64, error)
-		GenerateHistory(time.Time) ([]InvestmentReport, error)
+		AddInvestment(context.Context, Investment) (Investment, error)
+		UpdateInvestment(context.Context, Investment) (Investment, error)
+		FindInvestmentById(context.Context, InvestmentID) (Investment, error)
 	}
 
 	InvestmentID string

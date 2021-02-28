@@ -6,6 +6,7 @@ import (
 )
 
 type (
+	//InvestmentRepository behaves as a port for interacting with a database
 	InvestmentRepository interface {
 		AddInvestment(context.Context, Investment) (Investment, error)
 		UpdateInvestment(context.Context, Investment) (Investment, error)
@@ -24,6 +25,7 @@ type (
 		Duration            time.Time
 		PrincipalAmount     float64
 		InterestRateOverall float64
+		IsClosed            bool
 	}
 
 	InvestmentReport struct {
@@ -32,11 +34,16 @@ type (
 	}
 )
 
+const NoInterestValue = -1.0
+
 func (investment *Investment) calculateInterest() float64 {
 	return investment.CurrentAmount * (investment.InterestRatePerDay / 100)
 }
 
 func (investment Investment) CalculateTodaysValue() float64 {
+	if investment.IsInvestmentClosed() == true {
+		return NoInterestValue
+	}
 	return investment.CurrentAmount + investment.calculateInterest()
 }
 
@@ -66,4 +73,8 @@ func NewInvestment(initialAmount, currAmount, interestPerDay float64) Investment
 		CurrentAmount:      currAmount,
 		InterestRatePerDay: interestPerDay,
 	}
+}
+
+func (investment Investment) IsInvestmentClosed() bool {
+	return investment.IsClosed == true
 }

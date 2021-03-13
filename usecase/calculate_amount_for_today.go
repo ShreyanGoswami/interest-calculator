@@ -32,6 +32,18 @@ type (
 	}
 )
 
+func NewGetTodaysAmountInteractor(
+	investment domain.InvestmentRepository,
+	presenter GetTodaysAmountPresenter,
+	t time.Duration,
+) GetTodaysAmount {
+	return GetTodaysAmountInteractor{
+		repo:       investment,
+		presenter:  presenter,
+		ctxTimeout: t,
+	}
+}
+
 func (interactor GetTodaysAmountInteractor) Execute(ctx context.Context, input GetTodaysAmountInput) (GetTodaysAmountOutput, error) {
 	ctx, cancel := context.WithTimeout(ctx, interactor.ctxTimeout)
 	defer cancel()

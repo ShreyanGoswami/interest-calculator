@@ -32,6 +32,12 @@ type (
 	}
 )
 
+func NewGetTodaysAmountInput(investmentId string) GetTodaysAmountInput {
+	return GetTodaysAmountInput{
+		InvestmentID: domain.InvestmentID(investmentId),
+	}
+}
+
 func NewGetTodaysAmountInteractor(
 	investment domain.InvestmentRepository,
 	presenter GetTodaysAmountPresenter,

@@ -1,68 +1,56 @@
 package database
 
 import (
-	"context"
-
 	"github.com/ShreyanGoswami/interest-calculator/domain"
 	"github.com/hashicorp/go-memdb"
 )
 
-type InMemoryInvestmentRepo struct {
+type InMemoryMemDB struct {
 	db                  *memdb.MemDB
 	investmentTableName string
 }
 
-const idFieldName = "id" // TODO this needs to go somewhere else because it is common information for all implementations of the database
+const idFieldName = "id"
 
-func NewInMemoryInvestmentRepo(schema *memdb.DBSchema) (*InMemoryInvestmentRepo, error) {
+func NewInMemoryDatabase() (*InMemoryMemDB, error) {
+	schema := &memdb.DBSchema{
+		Tables: map[string]*memdb.TableSchema{
+			"investment": {
+				Name: "investment",
+				Indexes: map[string]*memdb.IndexSchema{
+					"id": {
+						Name:    "id",
+						Unique:  true,
+						Indexer: &memdb.StringFieldIndex{Field: "InvestmentID"},
+					},
+				},
+			},
+		},
+	}
 	db, err := memdb.NewMemDB(schema)
 	if err != nil {
 		panic(err)
 	}
 	tableName := "investment"
-	return &InMemoryInvestmentRepo{db, tableName}, nil
+	return &InMemoryMemDB{db, tableName}, nil
 }
 
-func (a InMemoryInvestmentRepo) AddInvestment(context context.Context, investment domain.Investment) (domain.Investment, error) {
+func (a InMemoryMemDB) InsertData(tableName string, data interface{}) error {
 	txn := a.db.Txn(true)
 	defer txn.Abort()
-	if err := txn.Insert(a.investmentTableName, investment); err != nil {
-		panic(err)
+	if err := txn.Insert(tableName, data); err != nil {
+		return err
 	}
 	txn.Commit()
-	return investment, nil
+	return nil
 }
 
-func (a InMemoryInvestmentRepo) FindInvestmentById(context context.Context, id domain.InvestmentID) (domain.Investment, error) {
+func (a InMemoryMemDB) FindOne(tableName string, query interface{}) (domain.Investment, error) {
 	txn := a.db.Txn(false)
 	defer txn.Abort()
-	queryID := string(id)
-	raw, err := txn.First(a.investmentTableName, idFieldName, queryID)
+	raw, err := txn.First(tableName, idFieldName, query)
 	if err != nil {
 		return domain.Investment{}, err
 	}
 	return raw.(domain.Investment), nil
-}
-
-func (a InMemoryInvestmentRepo) CloseInvestment(context context.Context, id domain.InvestmentID) (domain.Investment, error) {
-	investment, errInFindInvestment := a.FindInvestmentById(context, id)
-	if errInFindInvestment != nil {
-		panic(errInFindInvestment)
-	}
-	investment.IsClosed = true
-	updatedInvestment, errInUpdate := a.AddInvestment(context, investment)
-	if errInUpdate != nil {
-		panic(errInUpdate)
-	}
-	return updatedInvestment, nil
-}
-
-func (a InMemoryInvestmentRepo) FillInvestmentInMemoryDatabase(investments []domain.Investment) {
-	txn := a.db.Txn(true)
-	for _, investment := range investments {
-		if err := txn.Insert(a.investmentTableName, investment); err != nil {
-			panic(err)
-		}
-	}
-	txn.Commit()
 }
